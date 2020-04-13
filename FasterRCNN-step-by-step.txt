@@ -1,0 +1,360 @@
+Step0:吧pycocotools复制到object_detection下
+										Step1:
+在I:\models\research\object_detection\test_images建test和train文件夹来放图片和对应的xml
+在test_images文件夹下建xml_to_csv.py
+---------------------
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 16 00:52:02 2018
+@author: Xiang Guo
+"""
+
+import os
+import glob
+import pandas as pd
+import xml.etree.ElementTree as ET
+
+os.chdir('I:\\models\\research\\object_detection\\test_images\\test')
+path = 'I:\\models\\research\\object_detection\\test_images\\test'
+
+def xml_to_csv(path):
+    xml_list = []
+    for xml_file in glob.glob(path + '/*.xml'):
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+        for member in root.findall('object'):
+            value = (root.find('filename').text,
+                     int(root.find('size')[0].text),
+                     int(root.find('size')[1].text),
+                     member[0].text,
+                     int(member[4][0].text),
+                     int(member[4][1].text),
+                     int(member[4][2].text),
+                     int(member[4][3].text)
+                     )
+            xml_list.append(value)
+    column_name = ['filename', 'width', 'height', 'class', 'xmin', 'ymin', 'xmax', 'ymax']
+    xml_df = pd.DataFrame(xml_list, columns=column_name)
+    return xml_df
+
+
+def main():
+    image_path = path
+    xml_df = xml_to_csv(image_path)
+    xml_df.to_csv('plate_test.csv', index=None)
+    print('Successfully converted xml to csv.')
+
+
+main()
+---------------------------------------------
+*****直接运行来在test下面生成plate_test.csv： 
+*****修改os.path, path, 结尾的xml_df.to_csv('plate_test.csv', index=None)的参数， 在运行一遍来在data/下面生成plate_train.csv
+*****之后吧生成的两个csv剪切到object_detection/data下
+
+									Step2:
+在object_detection/下建立generate_tfrecord.py：
+---------------------------------
+"""
+Usage:
+  # From tensorflow/models/
+  # Create train data:
+python generate_TFR.py --csv_input=data/train.csv  --output_path=data/train.record
+  # Create test data:
+python generate_TFR.py --csv_input=data/test.csv  --output_path=data/test.record
+  需要修改三处
+  os.chdir('D:\\python3\\models-master\\research\\object_detection\\')
+  path = os.path.join(os.getcwd(), 'images/train')
+  def class_text_to_int(row_label): #对应的标签返回一个整数，后面会有文件用到
+    if row_label == 'ZJL':
+        return 1
+    elif row_label == 'CYX':
+        return 2
+    else:
+        None
+"""
+
+
+
+import os
+import io
+import pandas as pd
+import tensorflow as tf
+
+from PIL import Image
+from object_detection.utils import dataset_util
+from collections import namedtuple, OrderedDict
+
+os.chdir('I:\\models\\research\\object_detection\\')
+
+flags = tf.app.flags
+flags.DEFINE_string('csv_input', '', 'Path to the CSV input')
+flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
+FLAGS = flags.FLAGS
+
+
+# TO-DO replace this with label map
+def class_text_to_int(row_label):
+    if row_label == 'plate':
+        return 1
+    else:
+        None
+
+
+def split(df, group):
+    data = namedtuple('data', ['filename', 'object'])
+    gb = df.groupby(group)
+    return [data(filename, gb.get_group(x)) for filename, x in zip(gb.groups.keys(), gb.groups)]
+
+
+def create_tf_example(group, path):
+    with tf.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
+        encoded_jpg = fid.read()
+    encoded_jpg_io = io.BytesIO(encoded_jpg)
+    image = Image.open(encoded_jpg_io)
+    width, height = image.size
+
+    filename = group.filename.encode('utf8')
+    image_format = b'jpg'
+    xmins = []
+    xmaxs = []
+    ymins = []
+    ymaxs = []
+    classes_text = []
+    classes = []
+
+    for index, row in group.object.iterrows():
+        xmins.append(row['xmin'] / width)
+        xmaxs.append(row['xmax'] / width)
+        ymins.append(row['ymin'] / height)
+        ymaxs.append(row['ymax'] / height)
+        classes_text.append(row['class'].encode('utf8'))
+        classes.append(class_text_to_int(row['class']))
+
+    tf_example = tf.train.Example(features=tf.train.Features(feature={
+        'image/height': dataset_util.int64_feature(height),
+        'image/width': dataset_util.int64_feature(width),
+        'image/filename': dataset_util.bytes_feature(filename),
+        'image/source_id': dataset_util.bytes_feature(filename),
+        'image/encoded': dataset_util.bytes_feature(encoded_jpg),
+        'image/format': dataset_util.bytes_feature(image_format),
+        'image/object/bbox/xmin': dataset_util.float_list_feature(xmins),
+        'image/object/bbox/xmax': dataset_util.float_list_feature(xmaxs),
+        'image/object/bbox/ymin': dataset_util.float_list_feature(ymins),
+        'image/object/bbox/ymax': dataset_util.float_list_feature(ymaxs),
+        'image/object/class/text': dataset_util.bytes_list_feature(classes_text),
+        'image/object/class/label': dataset_util.int64_list_feature(classes),
+    }))
+    return tf_example
+
+
+def main(_):
+    writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
+    path = os.path.join(os.getcwd(), 'test_images/test') #20180418做了修改
+    examples = pd.read_csv(FLAGS.csv_input)
+    grouped = split(examples, 'filename')
+    for group in grouped:
+        tf_example = create_tf_example(group, path)
+        writer.write(tf_example.SerializeToString())
+
+    writer.close()
+    output_path = os.path.join(os.getcwd(), FLAGS.output_path)
+    print('Successfully created the TFRecords: {}'.format(output_path))
+
+
+if __name__ == '__main__':
+    tf.app.run()
+-------------------------------------------------------------------------
+********修改label_map那一块来对应水果,修改结尾的path = os.path.join(os.getcwd(), 'test_images/test')对应test图片路径
+git bash: python generate_tfrecord.py --csv_input=data/plate_test.csv --output_path=data/plate_test.record
+********修改结尾的path = os.path.join(os.getcwd(), 'test_images/train')对应train图片路径
+python generate_tfrecord.py --csv_input=data/plate_train.csv --output_path=data/plate_train.record
+********在data/下确认生成了两个新的record文件,train肯定比test大多了
+
+									STEP3
+在data文件夹下创建label_map.pbtxt文件：[这里的id和name要跟generate_tfrecord.py中的label_map那一块对应
+item {
+  id: 1
+  name: 'plate'
+}
+
+									STEP4
+*******
+去https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md里面下载model,下完后直接解压在object_detection下.
+解压完路径举例:I:\models\research\object_detection\faster_rcnn_inception_v2_coco_2018_01_28
+
+******去I:\models\research\object_detection\samples\configs下吧faster_rcnn_inception_v2_pets.config复制到object_detection\data下面
+更改复制过去的config
+**********************************************记住根路径有关的全部要用forward slash'/'，path只能用双引号"
+修改：
+# Faster R-CNN with Inception v2, configured for Oxford-IIIT Pets Dataset.
+# Users should configure the fine_tune_checkpoint field in the train config as
+# well as the label_map_path and input_path fields in the train_input_reader and
+# eval_input_reader. Search for "PATH_TO_BE_CONFIGURED" to find the fields that
+# should be configured.
+
+model {
+  faster_rcnn {
+    num_classes: 6
+    image_resizer {
+      keep_aspect_ratio_resizer {
+        min_dimension: 600
+        max_dimension: 1024
+      }
+    }
+    feature_extractor {
+      type: 'faster_rcnn_inception_v2'
+      first_stage_features_stride: 16
+    }
+    first_stage_anchor_generator {
+      grid_anchor_generator {
+        scales: [0.25, 0.5, 1.0, 2.0]
+        aspect_ratios: [0.5, 1.0, 2.0]
+        height_stride: 16
+        width_stride: 16
+      }
+    }
+    first_stage_box_predictor_conv_hyperparams {
+      op: CONV
+      regularizer {
+        l2_regularizer {
+          weight: 0.0
+        }
+      }
+      initializer {
+        truncated_normal_initializer {
+          stddev: 0.01
+        }
+      }
+    }
+    first_stage_nms_score_threshold: 0.0
+    first_stage_nms_iou_threshold: 0.7
+    first_stage_max_proposals: 300
+    first_stage_localization_loss_weight: 2.0
+    first_stage_objectness_loss_weight: 1.0
+    initial_crop_size: 14
+    maxpool_kernel_size: 2
+    maxpool_stride: 2
+    second_stage_box_predictor {
+      mask_rcnn_box_predictor {
+        use_dropout: false
+        dropout_keep_probability: 1.0
+        fc_hyperparams {
+          op: FC
+          regularizer {
+            l2_regularizer {
+              weight: 0.0
+            }
+          }
+          initializer {
+            variance_scaling_initializer {
+              factor: 1.0
+              uniform: true
+              mode: FAN_AVG
+            }
+          }
+        }
+      }
+    }
+    second_stage_post_processing {
+      batch_non_max_suppression {
+        score_threshold: 0.0
+        iou_threshold: 0.6
+        max_detections_per_class: 100
+        max_total_detections: 300
+      }
+      score_converter: SOFTMAX
+    }
+    second_stage_localization_loss_weight: 2.0
+    second_stage_classification_loss_weight: 1.0
+  }
+}
+
+train_config: {
+  batch_size: 1
+  optimizer {
+    momentum_optimizer: {
+      learning_rate: {
+        manual_step_learning_rate {
+          initial_learning_rate: 0.0002
+          schedule {
+            step: 1
+            learning_rate: .0002
+          }
+          schedule {
+            step: 900000
+            learning_rate: .00002
+          }
+          schedule {
+            step: 1200000
+            learning_rate: .000002
+          }
+        }
+      }
+      momentum_optimizer_value: 0.9
+    }
+    use_moving_average: false
+  }
+  gradient_clipping_by_norm: 10.0
+  fine_tune_checkpoint: "I:/models/research/object_detection/faster_rcnn_inception_v2_coco_2018_01_28/model.ckpt"
+  from_detection_checkpoint: true
+  # Note: The below line limits the training process to 200K steps, which we
+  # empirically found to be sufficient enough to train the pets dataset. This
+  # effectively bypasses the learning rate schedule (the learning rate will
+  # never decay). Remove the below line to train indefinitely.
+  num_steps: 12000
+  data_augmentation_options {
+    random_horizontal_flip {
+    }
+  }
+}
+
+
+train_input_reader: {
+  tf_record_input_reader {
+    input_path: "I:/models/research/object_detection/data/pocker_train.record"
+  }
+  label_map_path: "I:/models/research/object_detection/data/pocker_labelmap.pbtxt"
+}
+
+eval_config: {
+  num_examples: 67
+  # Note: The below line limits the evaluation process to 10 evaluations.
+  # Remove the below line to evaluate indefinitely.
+  max_evals: 10
+}
+
+eval_input_reader: {
+  tf_record_input_reader {
+    input_path: "I:/models/research/object_detection/data/pocker_test.record"
+  }
+  label_map_path: "I:/models/research/object_detection/data/pocker_labelmap.pbtxt"
+  shuffle: false
+  num_readers: 1
+}
+
+									STEP6：更改训练check_point的导出地址，以及训练pipeline
+到legacy/train.py下修改
+flags.DEFINE_string('train_dir', 'I:\\models\\research\\object_detection\\data\\trainied_model_test',
+                    'Directory to save the checkpoints and training summaries.')
+
+flags.DEFINE_string('pipeline_config_path', 'I:/models/research/object_detection/data/faster_rcnn_inception_v2_pets.config',
+                    'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
+                    'file. If provided, other configs are ignored')
+									STEP7：训练
+直接运行train.py
+									STEP8:export Inference Graph
+********注意更改model.ckpt-XXXX的数字
+python export_inference_graph.py --input_type image_tensor --pipeline_config_path /i/models/research/object_detection/data/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix /i/models/research/object_detection/data/trainied_model_test/model.ckpt-1500 --output_directory /i/models/research/object_detection/data/exported_inference_graph
+	
+									STEP9：
+运行测试，去object_detection/test.py. 
+*修改：
+self.PATH_TO_CKPT = 'I:/models/research/object_detection/data/exported_inference_graph/frozen_inference_graph.pb' #####这里，注意保证/
+self.PATH_TO_LABELS = 'I:/models/research/object_detection/data/pocker_labelmap.pbtxt'  #####这里,注意保证/
+self.NUM_CLASSES = 6
+。。。。
+。。。。
+if __name__ == '__main__':
+    image = cv2.imread('I:/models/research/object_detection/test_images/pocker/test/IMG_2384.JPG')  #####这里
+    detecotr = TOD()
+    detecotr.detect(image)
