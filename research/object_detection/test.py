@@ -61,6 +61,6 @@ class TOD(object):
 
 
 if __name__ == '__main__':
-    image = cv2.imread('I:/models/research/object_detection/test_images/fruit/check/bananas-996181_1920.jpg')
+    image = cv2.imread('I:/models/research/object_detection/test_images/fruit/check/gettyimages-597303605-2048x2048.jpg')
     detecotr = TOD()
     detecotr.detect(image)
