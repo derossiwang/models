@@ -9,8 +9,8 @@ import glob
 import pandas as pd
 import xml.etree.ElementTree as ET
 
-os.chdir('I:\\models\\research\\object_detection\\test_images\\pocker\\train')
-path = 'I:\\models\\research\\object_detection\\test_images\\pocker\\train'
+os.chdir('I:\\models\\research\\object_detection\\test_images\\fruit\\test')
+path = 'I:\\models\\research\\object_detection\\test_images\\fruit\\test'
 
 def xml_to_csv(path):
     xml_list = []
@@ -18,6 +18,7 @@ def xml_to_csv(path):
         tree = ET.parse(xml_file)
         root = tree.getroot()
         for member in root.findall('object'):
+            # print(member[0].text)
             value = (root.find('filename').text,
                      int(root.find('size')[0].text),
                      int(root.find('size')[1].text),
@@ -36,7 +37,7 @@ def xml_to_csv(path):
 def main():
     image_path = path
     xml_df = xml_to_csv(image_path)
-    xml_df.to_csv('pocker_train.csv', index=None)
+    xml_df.to_csv('fruit_test.csv', index=None)
     print('Successfully converted xml to csv.')
 
 

@@ -7,9 +7,9 @@ from object_detection.utils import visualization_utils as vis_util
 
 class TOD(object):
     def __init__(self):
-        self.PATH_TO_CKPT = 'I:/models/research/object_detection/data/exported_inference_graph/frozen_inference_graph.pb'
-        self.PATH_TO_LABELS = 'I:/models/research/object_detection/data/pocker_labelmap.pbtxt'
-        self.NUM_CLASSES = 6
+        self.PATH_TO_CKPT = 'I:/models/research/object_detection/data/faster_RCNN_banana_and_pear/frozen_inference_graph.pb'
+        self.PATH_TO_LABELS = 'I:/models/research/object_detection/data/faster_RCNN_banana_and_pear/fruit_labelmap.pbtxt'
+        self.NUM_CLASSES = 2
         self.detection_graph = self._load_model()
         self.category_index = self._load_label_map()
 
@@ -61,6 +61,6 @@ class TOD(object):
 
 
 if __name__ == '__main__':
-    image = cv2.imread('I:/models/research/object_detection/test_images/pocker/test/IMG_2384.JPG')
+    image = cv2.imread('I:/models/research/object_detection/test_images/fruit/check/bananas-996181_1920.jpg')
     detecotr = TOD()
     detecotr.detect(image)

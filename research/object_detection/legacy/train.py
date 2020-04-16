@@ -70,7 +70,7 @@ flags.DEFINE_integer('ps_tasks', 0,
 flags.DEFINE_string('train_dir', 'I:/models/research/object_detection/data/trainied_model_test',
                     'Directory to save the checkpoints and training summaries.')
 
-flags.DEFINE_string('pipeline_config_path', 'I:/models/research/object_detection/data/faster_rcnn_inception_v2_pets.config',
+flags.DEFINE_string('pipeline_config_path', 'I:/models/research/object_detection/data/faster_rcnn_resnet101_coco.config',
                     'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
                     'file. If provided, other configs are ignored')
 

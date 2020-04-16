@@ -1,12 +1,15 @@
 # Data files
-pocker
+test_images
 
 # Pre-trained models
 faster_rcnn_inception_v2_coco_2018_01_28
+faster_rcnn_resnet101_coco_2018_01_28
 ssd_inception_v2_coco_2018_01_28
 ssd_mobilenet_v1_coco_2017_11_17
 
-
+# the image record
+fruit_test.record
+fruit_train.record
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
