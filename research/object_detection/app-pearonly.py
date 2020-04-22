@@ -1,15 +1,38 @@
+from flask import Flask, request, render_template, jsonify, redirect
+from werkzeug.utils import secure_filename
+
 import cv2
 import numpy as np
 import tensorflow as tf
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
+from utils import label_map_util
+from utils import visualization_utils as vis_util
 
+app = Flask(__name__, template_folder='')
+from datetime import timedelta
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)  # avoid caching, which prevent showing the detection/splash result
+
+import os
+import sys
+import random
+
+
+# Root directory of the project
+ROOT_DIR = os.path.abspath("../../")
+sys.path.append(ROOT_DIR)  # To find local version of the library
+
+# Directory to save logs and trained model
+CKPT_DIR = os.path.join(ROOT_DIR, "research/object_detection/data/faster_RCNN_pear_only_v2/frozen_inference_graph.pb")
+LABEL_DIR = os.path.join(ROOT_DIR, "research/object_detection/data/faster_RCNN_pear_only_v2/fruit_labelmap.pbtxt")
+
+UPLOAD_FOLDER = os.path.join(ROOT_DIR, "research/object_detection/upload_images")
+ALLOWED_EXTENSIONS = set(['jpg'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 class TOD(object):
     def __init__(self):
-        self.PATH_TO_CKPT = 'I:/models/research/object_detection/data/faster_RCNN_banana_and_pear/frozen_inference_graph.pb'
-        self.PATH_TO_LABELS = 'I:/models/research/object_detection/data/faster_RCNN_banana_and_pear/fruit_labelmap.pbtxt'
-        self.NUM_CLASSES = 2
+        self.PATH_TO_CKPT = CKPT_DIR
+        self.PATH_TO_LABELS = LABEL_DIR
+        self.NUM_CLASSES = 1
         self.detection_graph = self._load_model()
         self.category_index = self._load_label_map()
 
@@ -59,8 +82,48 @@ class TOD(object):
         cv2.imshow("detection", image)
         cv2.waitKey(0)
 
+################################################################
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+def run_detection():
+    user_file_names = next(os.walk(UPLOAD_FOLDER))[2]
+    names_chosen = random.choice(user_file_names)
+    image = cv2.imread(os.path.join(UPLOAD_FOLDER, names_chosen))
+    print('\n-----------------', len([image]), '---------------\n')
 
-if __name__ == '__main__':
-    image = cv2.imread('I:/models/research/object_detection/test_images/fruit/check/Pear_tree_in_Hamedan_Iran.jpg')
     detecotr = TOD()
     detecotr.detect(image)
+
+@app.route('/')
+def home():
+    if request.method == 'GET':
+        return render_template('index.html')
+
+    return render_template('index.html')
+
+@app.route('/UploadDetect', methods=['GET', 'POST'])
+def upload_file_detect():
+    if request.method == 'GET':
+        return render_template('upload_detect.html')
+
+    if request.method == 'POST':
+        f = request.files['file']
+        print(request.files)
+        if f and allowed_file(f.filename):
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], 'uploaded_image.jpg'))
+            return redirect('/detect')
+        else:
+            print('file type is not correct')
+            return render_template('upload_detect.html')
+
+@app.route('/detect')
+def detect():
+    run_detection()
+    return render_template('upload_detect.html')
+
+'''
+Main function to run Flask server
+'''
+if __name__ == '__main__':
+    app.run()
