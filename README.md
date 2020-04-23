@@ -109,7 +109,7 @@ pip install Flask
 
 9. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
 
-   1. ![Instance Segmentation Sample](assets/pythonpath.jpg)
+   1. ![Instance Segmentation Sample](assets/pythonpath.JPG)
    
 10. Run setup.py
 
@@ -168,7 +168,7 @@ Setting up the server can take a while as it has to initialize the model, usuall
 
 # Usage
 
-1. Open a web browser and visit `http://127.0.0.1:5000/`![successfully setup server](assets/home_page.JPG)
+1. Open a web browser and visit `http://127.0.0.1:5000/`![successfully setup server](assets/home_page.png)
 2. Click The `Detect` button if you wish to run standard fruit detection. 
 3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection. The detection time can vary depends on the image quality, fruit density and computational power. ![successfully setup server](assets/upload.JPG)
 4. The detection result will be shown on a separate window, please keep an eye on the task bar for the pop up window![successfully setup server](assets/result.JPG)
