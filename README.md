@@ -70,7 +70,7 @@ System environment: Windows
 5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
 
    1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
-      ![Instance Segmentation Sample](assets/cuda_test.jpg)
+      ![Instance Segmentation Sample](assets/cuda_test.png)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the TensorFlow, CUDA and cuDNN. 
 
