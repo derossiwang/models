@@ -8,8 +8,7 @@ Song Y, Guadarrama S, Murphy K, CVPR 2017
 '''
 
 
-from flask import Flask, request, render_template, jsonify, redirect
-from werkzeug.utils import secure_filename
+from flask import Flask, request, render_template, redirect
 
 import cv2
 import numpy as np
@@ -46,6 +45,7 @@ class TOD(object):
         self.detection_graph = self._load_model()
         self.category_index = self._load_label_map()
 
+    # load the pre-trained model via the frozen inference graph
     def _load_model(self):
         detection_graph = tf.Graph()
         with detection_graph.as_default():
@@ -56,6 +56,7 @@ class TOD(object):
                 tf.import_graph_def(od_graph_def, name='')
         return detection_graph
 
+    # load the label map so that we know what object has been detected
     def _load_label_map(self):
         label_map = label_map_util.load_labelmap(self.PATH_TO_LABELS)
         categories = label_map_util.convert_label_map_to_categories(label_map,

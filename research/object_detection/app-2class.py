@@ -8,8 +8,7 @@ Song Y, Guadarrama S, Murphy K, CVPR 2017
 '''
 
 
-from flask import Flask, request, render_template, jsonify, redirect
-from werkzeug.utils import secure_filename
+from flask import Flask, request, render_template, redirect
 
 import cv2
 import numpy as np
@@ -38,13 +37,7 @@ UPLOAD_FOLDER = os.path.join(ROOT_DIR, "research/object_detection/upload_images"
 ALLOWED_EXTENSIONS = set(['jpg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-'''
-The detection code is partially derived and modified from the object_detection_tutorial.ipynb.
-The original author should be honoured:
-"Speed/accuracy trade-offs for modern convolutional object detectors."
-Huang J, Rathod V, Sun C, Zhu M, Korattikara A, Fathi A, Fischer I, Wojna Z,
-Song Y, Guadarrama S, Murphy K, CVPR 2017
-'''
+
 class TOD(object):
     def __init__(self):
         self.PATH_TO_CKPT = CKPT_DIR
@@ -53,6 +46,7 @@ class TOD(object):
         self.detection_graph = self._load_model()
         self.category_index = self._load_label_map()
 
+    # load the pre-trained model via the frozen inference graph
     def _load_model(self):
         detection_graph = tf.Graph()
         with detection_graph.as_default():
@@ -63,6 +57,7 @@ class TOD(object):
                 tf.import_graph_def(od_graph_def, name='')
         return detection_graph
 
+    # load the label map so that we know what object has been detected
     def _load_label_map(self):
         label_map = label_map_util.load_labelmap(self.PATH_TO_LABELS)
         categories = label_map_util.convert_label_map_to_categories(label_map,
