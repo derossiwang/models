@@ -109,10 +109,8 @@ pip install Flask
 
 9. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
 
-   1. ```
-      C:\> set PYTHONPATH=I:\models;I:\models\research;I:\models\research\slim
-      ```
-
+   1. ![Instance Segmentation Sample](assets/pythonpath.jpg)
+   
 10. Run setup.py
 
     1. Navigate to models/research, issue command 
