@@ -122,7 +122,7 @@ pip install Flask
            python setup.py install
        ```
 
-    2. Then Navigate to models/research/slim, issue command
+    2. Then Navigate to models/research/slim, Delete existing BUILD file if any. Then issue command
 
        ```
            python setup.py build
@@ -146,7 +146,7 @@ models
     |.................
     |   |   └── data
     |   |   |   └── faster_RCNN_banana_and_pear 	//trained model
-    |   |   |   └── faster_RCNN_pear_only_v2 	//trained model
+    |   |   |   └── faster_RCNN_pear_only_v2 		//trained model
     |.................
     |   |   └── uploaded images		//folder to store the uploaded image by users
     |   |   └── app-2class.py		//flask server to detect pear and banana
