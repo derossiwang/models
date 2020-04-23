@@ -1,3 +1,13 @@
+'''
+The detection code is partially derived and modified from the object_detection_tutorial.ipynb.
+The original author should be honoured:
+
+"Speed/accuracy trade-offs for modern convolutional object detectors."
+Huang J, Rathod V, Sun C, Zhu M, Korattikara A, Fathi A, Fischer I, Wojna Z,
+Song Y, Guadarrama S, Murphy K, CVPR 2017
+'''
+
+
 from flask import Flask, request, render_template, jsonify, redirect
 from werkzeug.utils import secure_filename
 

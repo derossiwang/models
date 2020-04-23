@@ -1,3 +1,13 @@
+'''
+The detection code is partially derived and modified from the object_detection_tutorial.ipynb.
+The original author should be honoured:
+
+"Speed/accuracy trade-offs for modern convolutional object detectors."
+Huang J, Rathod V, Sun C, Zhu M, Korattikara A, Fathi A, Fischer I, Wojna Z,
+Song Y, Guadarrama S, Murphy K, CVPR 2017
+'''
+
+
 from flask import Flask, request, render_template, jsonify, redirect
 from werkzeug.utils import secure_filename
 
@@ -28,6 +38,13 @@ UPLOAD_FOLDER = os.path.join(ROOT_DIR, "research/object_detection/upload_images"
 ALLOWED_EXTENSIONS = set(['jpg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+'''
+The detection code is partially derived and modified from the object_detection_tutorial.ipynb.
+The original author should be honoured:
+"Speed/accuracy trade-offs for modern convolutional object detectors."
+Huang J, Rathod V, Sun C, Zhu M, Korattikara A, Fathi A, Fischer I, Wojna Z,
+Song Y, Guadarrama S, Murphy K, CVPR 2017
+'''
 class TOD(object):
     def __init__(self):
         self.PATH_TO_CKPT = CKPT_DIR
