@@ -14,6 +14,7 @@ Song Y, Guadarrama S, Murphy K, CVPR 2017
 
 System environment: Windows
 
+- Protobuf 3.11.3
 - Python-tk
 - Pillow
 - opencv-python
@@ -107,13 +108,19 @@ pip install Flask
 
 8. Follow the [instructions](https://github.com/philferriere/cocoapi) and install cocoapi. 
 
-9. Install Protobuf, refers to this [link](https://github.com/tensorflow/models/blob/r1.13.0/research/object_detection/g3doc/installation.md)
+9. Install Protobuf V3.11.3, using the follow command. This step is very important, it is compulsory to run the detection
+
+   1. ```
+      pip install protobuf
+      ```
+
+   2. To verify installation, issue 'protoc' in the terminal. You should see similar output like this:![Instance Segmentation Sample](assets/protoc.JPG)
 
 10. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
 
-   1. ![Instance Segmentation Sample](assets/pythonpath.JPG)
+   11. ![Instance Segmentation Sample](assets/pythonpath.JPG)
 
-11. Run setup.py
+12. Run setup.py
 
     1. Navigate to models/research, issue command 
 
@@ -129,7 +136,7 @@ pip install Flask
            python setup.py install
        ```
 
-12. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
+13. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
 
         python model_builder_test.py
 
