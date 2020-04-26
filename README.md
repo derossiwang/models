@@ -107,11 +107,13 @@ pip install Flask
 
 8. Follow the [instructions](https://github.com/philferriere/cocoapi) and install cocoapi. 
 
-9. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
+9. Install Protobuf, refers to this [link](https://github.com/tensorflow/models/blob/r1.13.0/research/object_detection/g3doc/installation.md)
+
+10. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
 
    1. ![Instance Segmentation Sample](assets/pythonpath.JPG)
-   
-10. Run setup.py
+
+11. Run setup.py
 
     1. Navigate to models/research, issue command 
 
@@ -127,7 +129,7 @@ pip install Flask
            python setup.py install
        ```
 
-11. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
+12. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
 
         python model_builder_test.py
 
