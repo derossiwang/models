@@ -1,6 +1,6 @@
 # Faster R-CNN for Fruit Detection
 
-This is repo implements Faster RCNN to detect pears and bananas on python3, TensorFlow and Flask. This repo is a forked repo, which built on the already established framework contributed by the TensorFlow team. The original repo can be found [here](https://github.com/tensorflow/models).
+This is repo implements Faster RCNN to detect pears and bananas on python3, TensorFlow and Flask. This repo is a forked repo, which built on the already established framework contributed by the TensorFlow team. The original repo can be found [here](https://github.com/tensorflow/models). The work from TensorFlow is appreciated and honoured. 
 
 # Honour Original Work
 
@@ -47,11 +47,11 @@ System environment: Windows
       pip install tensorflow==1.14
     ```
 
-3. **[Follow only If you have a GPU card]**Go to the [Nvidia Website](https://developer.nvidia.com/cuda-10.0-download-archive), Follow the instructions to install CUDA Toolkit 10.0 Archive. 
+3. **[Follow only If you have a GPU card]** Go to the [Nvidia Website](https://developer.nvidia.com/cuda-10.0-download-archive), Follow the instructions to install CUDA Toolkit 10.0 Archive. 
 
    1. Note that you may need to install Microsoft Visual Studio 2017 if the installation program asks.
 
-4. **[Follow only If you have a GPU card]**Download [cuDNN v7.6.5 (November 5th, 2019), for CUDA 10.0](https://developer.nvidia.com/rdp/cudnn-download#a-collapse765-10)] zip file and unzip it to a folder. 
+4. **[Follow only If you have a GPU card]** Download [cuDNN v7.6.5 (November 5th, 2019), for CUDA 10.0](https://developer.nvidia.com/rdp/cudnn-download#a-collapse765-10)] zip file and unzip it to a folder. 
 
    1. Copy all the cuDNN components to `C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0 ` 
 
