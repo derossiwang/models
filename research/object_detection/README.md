@@ -68,7 +68,9 @@ System environment: Windows
       SET PATH=C:\tools\cuda\bin;%PATH%
       ```
 
-5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
+5. Restart the computer. 
+
+6. **[Follow only If you have a GPU card]**Test that GPU Toolkit is ready for TensorFlow. 
 
    1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
       ![Instance Segmentation Sample](assets/cuda_test.png)
@@ -81,7 +83,7 @@ System environment: Windows
 
          [[Tutorial2]](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows) 
 
-6. Test You can start the TensorFlow-GPU without errors by issue the command in `Python` 
+7. Test You can start the TensorFlow/GPU without errors by issue the command in `Python` 
 
    ```bash
       import tensorflow as tf
@@ -92,7 +94,7 @@ System environment: Windows
 
    ![Instance Segmentation Sample](assets/gpu_test.jpg)   
 
-7. Then install other libraries
+8. Then install other libraries
 
 ```
 pip install Cython
@@ -108,7 +110,7 @@ pip install Flask
 
 8. Follow the [instructions](https://github.com/philferriere/cocoapi) and install cocoapi. 
 
-9. Install Protobuf V3.11.3, using the follow command. This step is very important, it is compulsory to run the detection
+9. Install Protobuf V3.11.3, using the follow command. **This step is very important, it is compulsory to run the detection**
 
    1. ```
       pip install protobuf
@@ -116,7 +118,7 @@ pip install Flask
 
    2. To verify installation, issue 'protoc' in the terminal. You should see similar output like this:![Instance Segmentation Sample](assets/protoc.JPG)
 
-10. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
+10. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories. **Note: This step is very important, it is compulsory to run the detection**
 
    11. ![Instance Segmentation Sample](assets/pythonpath.JPG)
 
