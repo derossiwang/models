@@ -156,11 +156,11 @@ models
     |   |   |   └── faster_RCNN_pear_only_v2 		//trained model
     |.................
     |   |   └── uploaded images		//folder to store the uploaded image by users
+    |   |   └── static/images		//folder to store the detection result
     |   |   └── app-2class.py		//flask server to detect pear and banana
     |   |   └── app-pearonly.py		//flask server to detect pear
     |.................
-    |   |   └── index.html
-    |   |   └── upload_detect.html
+    |   |   └── html files
     
 ```
 

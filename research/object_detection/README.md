@@ -14,6 +14,7 @@ Song Y, Guadarrama S, Murphy K, CVPR 2017
 
 System environment: Windows
 
+- Protobuf 3.11.3
 - Python-tk
 - Pillow
 - opencv-python
@@ -70,7 +71,7 @@ System environment: Windows
 5. Restart the computer. Test that GPU Toolkit is ready for TensorFlow. 
 
    1. Issue the command `nvcc -V` to verify CUDA and cuDNN installation, you should see the version of your CUDA tools. 
-      ![Instance Segmentation Sample](assets/cuda_test.jpg)
+      ![Instance Segmentation Sample](assets/cuda_test.png)
 
    2. If you encountered any error, please reinstall again. Here are some useful Tutorials to help to install the TensorFlow, CUDA and cuDNN. 
 
@@ -107,13 +108,19 @@ pip install Flask
 
 8. Follow the [instructions](https://github.com/philferriere/cocoapi) and install cocoapi. 
 
-9. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
+9. Install Protobuf V3.11.3, using the follow command. This step is very important, it is compulsory to run the detection
 
    1. ```
-      C:\> set PYTHONPATH=I:\models;I:\models\research;I:\models\research\slim
+      pip install protobuf
       ```
 
-10. Run setup.py
+   2. To verify installation, issue 'protoc' in the terminal. You should see similar output like this:![Instance Segmentation Sample](assets/protoc.JPG)
+
+10. Configure PYTHONPATH environment variables. A PYTHONPATH variable must be created that points to the \models, \models\research, and \models\research\slim directories.
+
+   11. ![Instance Segmentation Sample](assets/pythonpath.JPG)
+
+12. Run setup.py
 
     1. Navigate to models/research, issue command 
 
@@ -122,14 +129,14 @@ pip install Flask
            python setup.py install
        ```
 
-    2. Then Navigate to models/research/slim, issue command
+    2. Then Navigate to models/research/slim, Delete existing BUILD file if any. Then issue command
 
        ```
            python setup.py build
            python setup.py install
        ```
 
-11. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
+13. Test the installation, navigate to the models/research/object_detection/builders/, issue the command
 
         python model_builder_test.py
 
@@ -146,14 +153,14 @@ models
     |.................
     |   |   └── data
     |   |   |   └── faster_RCNN_banana_and_pear 	//trained model
-    |   |   |   └── faster_RCNN_pear_only_v2 	//trained model
+    |   |   |   └── faster_RCNN_pear_only_v2 		//trained model
     |.................
     |   |   └── uploaded images		//folder to store the uploaded image by users
+    |   |   └── static/images		//folder to store the detection result
     |   |   └── app-2class.py		//flask server to detect pear and banana
     |   |   └── app-pearonly.py		//flask server to detect pear
     |.................
-    |   |   └── index.html
-    |   |   └── upload_detect.html
+    |   |   └── html files
     
 ```
 
@@ -173,8 +180,8 @@ Setting up the server can take a while as it has to initialize the model, usuall
 1. Open a web browser and visit `http://127.0.0.1:5000/`![successfully setup server](assets/home_page.JPG)
 2. Click The `Detect` button if you wish to run standard fruit detection. 
 3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection. The detection time can vary depends on the image quality, fruit density and computational power. ![successfully setup server](assets/upload.JPG)
-4. The detection result will be shown on a separate window, please keep an eye on the task bar for the pop up window![successfully setup server](assets/result.JPG)
-5. If you wish to detect another image, close the pop up image window, you will be redirect back to the image upload page. Simply run the above steps again to detect another image
+4. The detection result will be shown on another page. Please also note that the detection result will be saved to `object_detection/static/images/detection_result.jpg`. Manually inspect result can be useful if you keep seeing the same output on the webpage, which is caused by browser cache.![successfully setup server](assets/result.JPG)
+5. If you wish to detect another image, click the go back button and follow the above steps again. 
 
 ## Note
 
