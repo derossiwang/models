@@ -33,11 +33,13 @@ sys.path.append(ROOT_DIR)  # To find local version of the library
 CKPT_DIR = os.path.join(ROOT_DIR, "research/object_detection/data/faster_RCNN_banana_and_pear/frozen_inference_graph.pb")
 LABEL_DIR = os.path.join(ROOT_DIR, "research/object_detection/data/faster_RCNN_banana_and_pear/fruit_labelmap.pbtxt")
 
+IMAGE_DIR = os.path.join(ROOT_DIR, "research/object_detection/static/images/")
+
 UPLOAD_FOLDER = os.path.join(ROOT_DIR, "research/object_detection/upload_images")
 ALLOWED_EXTENSIONS = set(['jpg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
+# avoid caching, which prevent showing the detection/splash result
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
 class TOD(object):
     def __init__(self):
         self.PATH_TO_CKPT = CKPT_DIR
@@ -90,8 +92,8 @@ class TOD(object):
                     use_normalized_coordinates=True,
                     line_thickness=8)
 
-        cv2.namedWindow("detection", cv2.WINDOW_NORMAL)
-        cv2.imshow("detection", image)
+        # cv2.namedWindow("detection", cv2.WINDOW_NORMAL)
+        cv2.imwrite(os.path.join(IMAGE_DIR , 'detection_result.jpg'), image)
         cv2.waitKey(0)
 
 ################################################################
@@ -132,7 +134,7 @@ def upload_file_detect():
 @app.route('/detect')
 def detect():
     run_detection()
-    return render_template('upload_detect.html')
+    return render_template('result_detect.html')
 
 '''
 Main function to run Flask server

@@ -177,11 +177,11 @@ Setting up the server can take a while as it has to initialize the model, usuall
 
 # Usage
 
-1. Open a web browser and visit `http://127.0.0.1:5000/`![successfully setup server](assets/home_page.png)
+1. Open a web browser and visit `http://127.0.0.1:5000/`![successfully setup server](assets/home_page.JPG)
 2. Click The `Detect` button if you wish to run standard fruit detection. 
 3. Click `Choose File` button to chose a 'jpg' image, then upload the image to model via `Upload and Detect`button. Wait for the computer to run the detection. The detection time can vary depends on the image quality, fruit density and computational power. ![successfully setup server](assets/upload.JPG)
-4. The detection result will be shown on a separate window, please keep an eye on the task bar for the pop up window![successfully setup server](assets/result.JPG)
-5. If you wish to detect another image, close the pop up image window, you will be redirect back to the image upload page. Simply run the above steps again to detect another image
+4. The detection result will be shown on another page. Please also note that the detection result will be saved to `object_detection/static/images/detection_result.jpg`. Manually inspect result can be useful if you keep seeing the same output on the webpage, which is caused by browser cache.![successfully setup server](assets/result.JPG)
+5. If you wish to detect another image, click the go back button and follow the above steps again. 
 
 ## Note
 
