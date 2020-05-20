@@ -54,13 +54,13 @@ class TOD(object):
                     self.category_index,
                     use_normalized_coordinates=True,
                     line_thickness=8)
-
+        print("detetion complete!!!!!!!!!!!!!!!!!!!!!!!!!!")
         cv2.namedWindow("detection", cv2.WINDOW_NORMAL)
         cv2.imshow("detection", image)
         cv2.waitKey(0)
 
 
 if __name__ == '__main__':
-    image = cv2.imread('I:/models/research/object_detection/test_images/fruit/check/Pear_tree_in_Hamedan_Iran.jpg')
+    image = cv2.imread('I:/Mask_RCNN/Provided_test_images/4959147755_f289f7c838_k-r.jpg')
     detecotr = TOD()
     detecotr.detect(image)

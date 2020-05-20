@@ -91,7 +91,7 @@ class TOD(object):
                     self.category_index,
                     use_normalized_coordinates=True,
                     line_thickness=8)
-
+        print("___________________detection complete___________________")
         # cv2.namedWindow("detection", cv2.WINDOW_NORMAL)
         cv2.imwrite(os.path.join(IMAGE_DIR , 'detection_result.jpg'), image)
         cv2.waitKey(0)
